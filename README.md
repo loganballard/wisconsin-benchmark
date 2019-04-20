@@ -8,15 +8,15 @@ Set environment variables that contain Postgres information.  You'll need access
 
 #### Environment Variables
     - P_HOST: Name of postgres host.  Defaults to localhost
-    - P_DB: Name of postgres db. Defaults to postgres
+    - P_DB: Name of postgres db. Defaults to wisc
     - P_PORT: Postgres port. Defaults to 5432
-    - P_USER: Postgres Username.  Defaults to admin
+    - P_USER: Postgres Username.  Defaults to postgres
     - P_PASS: Postgres Password. Defaults to admin
 
 Set up a python environment that will use `psycopg2` and allow programmatic postgres integration.
 
 #### Python Environment
-1. [Install python and pip](https://www.makeuseof.com/tag/install-pip-for-python/)
+1. [Install python3.6+ and pip](https://www.makeuseof.com/tag/install-pip-for-python/)
 2. [Create a python virtual environment](https://packaging.python.org/guides/installing-using-pip-and-virtualenv/)
     - Depending on your OS, this will look different.  On Windows: `python -m virtualenv venv`
 3. Activate the virtual environment
