@@ -16,7 +16,7 @@ def transaction(db_call):
     def transaction_wrapper(conn, *args, **kwargs):
         try:
             cursor = conn.cursor()
-            db_call(cursor, *args, **kwargs)
+            db_call(cursor=cursor, *args, **kwargs)
             cursor.close()
             conn.commit()
         except pgre.DatabaseError as error:
@@ -25,9 +25,9 @@ def transaction(db_call):
     return transaction_wrapper
 
 @transaction
-def create_schema(cursor, schema):
+def create_schema(conn, schema, cursor=None):
     """
-    Make sure to pass in a connection object!
+    Make sure to pass in a connection object! Must pass in arguments by keyword.
     Creates the named schema. Transaction decorator will pass in a 
     cursor object.
     
