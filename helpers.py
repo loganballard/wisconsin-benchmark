@@ -11,9 +11,17 @@ def get_setup_vars():
         'pass': env['P_PASS'] if env.get('P_PASS') else 'admin'
     }
 
-# decorator that will do all the try/catching for pyscopg2
-# sql errors
 def transaction(db_call):
+    """
+    decorator that will do all the try/catching for pyscopg2
+    sql errors
+
+    Pass in a function that takes a CONNECTION as an argument
+    and then any other arguments.  Note that this will return a
+    function that takes a CURSOR as an argument, so in the 
+    function definition, a CURSOR must be used, but when
+    decorated and used, a CONNECTION must be passed
+    """
     def transaction_wrapper(conn, *args, **kwargs):
         try:
             cursor = conn.cursor()
