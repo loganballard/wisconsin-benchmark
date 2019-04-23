@@ -28,3 +28,14 @@ Set up a python environment that will use `psycopg2` and allow programmatic post
 In this section, I'll be creating the tables in postgres, and creating data generation code.  The DB that I've chosen is PostGreSQL because of my familiarity with it, its vast use and support in the DB community, and widely available programming language support.
 
 I'll be using Python for data generation due to my familiarty with it and ease of scripting.  The thoroughly documented [psycopg2](http://initd.org/psycopg/docs/) python library is easy to use and integrates well.
+
+The intial population is all done with a python driver. It allows setting of all postgres-related variables that are necessary for connections.  It also will populate all of the necessary data for analysis according to the wisconsin benchmark.
+
+### Driver Usage
+
+To use the driver, call it with `python main.py`.  It accepts two flags that will be useful:
+
+- -c | The `--creds` flag will set the environment variables necessary for postgres connections according to user input.
+- -p | The `--populate` flag will build a schema, tables, and randomized data that lives in those tables.
+    - Schema created is user-named
+    - Tables created according to the Wisconsin Benchmark specification: `onektup`, `tenktup1`, `tenktup2`
