@@ -1,6 +1,6 @@
-# Wisconsin Benchmark
+# Logan's Wisconsin Benchmark
 
-My attempt to recreate the Wisconsin Benchmark is PostGreSQL.  I know that postgres has this implementation already, but this is a good DB exercise.
+My attempt to recreate the Wisconsin Benchmark is PostGreSQL.  I know that postgres has this implemented already, but this is a good DB exercise.
 
 ## Pre-requisite Setup
 
@@ -35,7 +35,28 @@ The intial population is all done with a python driver. It allows setting of all
 
 To use the driver, call it with `python main.py`.  It accepts two flags that will be useful:
 
-- -c | The `--creds` flag will set the environment variables necessary for postgres connections according to user input.
-- -p | The `--populate` flag will build a schema, tables, and randomized data that lives in those tables.
-    - Schema created is user-named
-    - Tables created according to the Wisconsin Benchmark specification: `onektup`, `tenktup1`, `tenktup2`
+- __-c__ 
+    - The `--creds` flag will set the environment variables necessary for postgres connections according to user input.
+- __-p__ 
+    - The `--populate` flag will build a schema, tables, and randomized data that lives in those tables.
+        - Schema name will be determined by user input
+        - Tables are created according to the [Wisconsin Benchmark specification](http://jimgray.azurewebsites.net/benchmarkhandbook/chapter4.pdf): `onektup`, `tenktup1`, `tenktup2`.
+
+#### Example Tuples from `onektup`:
+```
+"unique1","unique2","two","four","ten","twenty","onepercent","tenpercent","twentypercent","fiftypercent","unique3","evenonepercent","oddonepercent","stringu1","stringu2","string4"
+1888,0,0,0,8,8,88,8,3,0,1888,176,177,"AAAACUQxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx","AAAAAAAxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx","AAAAxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+8140,1,0,0,0,0,40,0,0,0,8140,80,81,"AAAAMBCxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx","AAAAAABxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx","HHHHxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+9000,2,0,0,0,0,0,0,0,0,9000,0,1,"AAAANIExxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx","AAAAAACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx","OOOOxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+4925,3,1,1,5,5,25,5,0,1,4925,50,51,"AAAAHHLxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx","AAAAAADxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx","VVVVxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+1734,4,0,2,4,14,34,4,4,0,1734,68,69,"AAAACOSxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx","AAAAAAExxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx","AAAAxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+1925,5,1,1,5,5,25,5,0,1,1925,50,51,"AAAACWBxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx","AAAAAAFxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx","HHHHxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+...
+(994 more)
+...
+```
+
+### Lessons Learned from Part 1
+
+- Make sure to figure out how to make postgres connections before trying to write the SQL necessary to do data population
+- Test with tiny subset before trying to populate the entire database
