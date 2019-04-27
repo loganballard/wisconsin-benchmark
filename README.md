@@ -60,3 +60,7 @@ To use the driver, call it with `python main.py`.  It accepts two flags that wil
 
 - Make sure to figure out how to make postgres connections before trying to write the SQL necessary to do data population
 - Test with tiny subset before trying to populate the entire database
+
+## Part 2: Benchmarks
+
+In order to accurately use this database, it is necessary to develop several queries that will accurately test database performance.  The goal of this portion of the Wisconsin Benchmark is to produce queries that will gauge the performance of database systems in measureable and valuable ways.
