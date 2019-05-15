@@ -64,3 +64,5 @@ To use the driver, call it with `python main.py`.  It accepts two flags that wil
 ## Part 2: Benchmarks
 
 In order to accurately use this database, it is necessary to develop several queries that will accurately test database performance.  The goal of this portion of the Wisconsin Benchmark is to produce queries that will gauge the performance of database systems in measureable and valuable ways.
+
+In this set of experiments, I will test how postgres performs when configured with a variety of different tests.  See the [performance-test-plan](./performance-test-plan) folder for more.
