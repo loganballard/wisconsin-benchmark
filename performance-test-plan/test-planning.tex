@@ -39,11 +39,37 @@ I examined a few parameters that are involved in tuning postgres performance.  T
 		\item \textit{enable\_hashjoin} - Will want to find queries where a hash join is preferable and attempt to show performance of them improving or degrading.
 		\item \textit{enable\_mergejoin} - Will want to find queries where a merge join is preferable and attempt to show performance of them improving or degrading.  Maybe create a hierarchy of join types?
 		\item \textit{enable\_sort } - All sorting steps will be discouraged.  I would expect this to degrade performance significantly in ORDER BY and GROUP BY as well as sort-merge join queries.
-		
-		
+		\item \textit{geqo\_effort} - This parameter sets the amount of time that postgres will spend looking for the ideal query plan.  It will be most effective in complicated queries (I suspect)
 	\end{enumerate}
 
 \end{enumerate}	
+
+\item \textbf{The Experiments}
+
+For these experiments, I will start with attempting a simplistic version of the test.  From there, I will move on to something more complicated and then finally perform the most intricate version of the test.  With each experiment I will measure the time taken for the query, join, insert, or update to execute.
+
+\begin{enumerate}
+	
+	\item \textbf{Experiment 1: The 10\% Rule of Thumb}
+	\begin{enumerate}
+		\item This test explores when it is good to use an unclustered index vs. not using an index vs. using a clustered index
+		\item Use a 100,000 tuple relation (scaled up version of TENKTUP1)
+		\item Use Wisconsin Bench queries 2, 4 and 6. Run queries 2, 4, and 6 on the same dataset. Query 2 should be run without an index on unique2, Query 4 should be run with a clustered index on unique2, Query 6 requires an unclustered index on unique1
+		\item No parameters changed in this test
+		\item asdfasdfasdfasdfdsafdsa
+	\end{enumerate}
+	 
+	 \item \textbf{Experiment 2: Joins}
+	 \begin{enumerate}
+	 	\item This test aims to measure the performance of different types of joins across different relations using different algorithms.
+	 	\item Use the 1ktup joined with 1ktup, 10ktup joined with 10ktup
+	 	\item Run several joins - inner join on some predecate, left join, and joins not based on equality (join where id > 10)
+	 	\item Change hashjoin and mergejoin allowed
+	 	\item asdfasdfasdfasdfdsafdsa
+	 \end{enumerate}
+	 
+\end{enumerate}
+
 
 \end{enumerate}	
 \end{document}
