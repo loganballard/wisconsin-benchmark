@@ -88,10 +88,10 @@ For these experiments, I will start with attempting a simplistic version of the 
 	\item \textbf{Experiment 4: Query Optimization}
 	\begin{enumerate}
 		\item For this experiment, I'd like to figure out just how much the query optimization time that postgres gives itself actually helps with performance.  I'd like to run a bunch of rounds of a few queries, each with the tuning set to different levels just to see if the improvement scales roughly linearly with the amount of time that the optimizer spends trying to optimize it.
-		\item Because the optimizer is likely only used when there can be a variety of different joins, I'd like to create a three-way and four-way join between the 1k, 1k, 10k, and (another copy ofthe ) 10k different tables.
-		\item Join queries, based on the ones from the Wisconsin benchmark.
-		\item \textit{geqo\_effort} will be tuned accordingly.  There are several different integers corresponding to the amount of time that postgres will take trying to find the best possible query tree for a certain join.
-		\item I expect that for simple queries that involve just a single two-way join, this number will not matter a whole lot.  However, as the amount of tables involved and the complexity of the joins themselves goes up, I suspect that this number will begin to be more and more important.
+		\item Because the optimizer is likely only used when there can be a variety of different joins, I'd like to create a three-way and four-way join between the ONEKTUP, TENKTUP, HUNDREDKTUP, and BPRIME relations.
+		\item For join queries, I will use queries that are roughly equivalent to queries 10 and 13.  However, In addition to being a join from TENKTUP <--> BPRIME, I will add a third join to ONEKTUP on BPRIME.unique2 = ONEKTUP.unique2. In addition, I will run that query with HUNDREDKTUP rather than ONEKTUP.  For a four-way join, I will add an additional join such that the query is joining ONEKTUP (BPRIME.unique2 = ONEKTUP.unique2) AND HUNDREDKTUP (BPRIME.unique1 = HUNDREDKTUP.unique1).
+		\item \textit{geqo\_effort} will be tuned accordingly.  There are several different integers corresponding to the amount of time that postgres will take trying to find the best possible query tree for a certain join.  I will set it first to 1 (the minimum), then to 5 (the default value), then to 10 (the maximum).
+		\item I expect that for simple queries that involve just a single two-way join, this number will not matter a whole lot.  Postgres should be smart enough to find a join that is efficient in a relatively short amount of time.  However, as the amount of tables involved and the complexity of the joins themselves goes up, I suspect that this number will begin to be more and more important.
 	\end{enumerate}
 	 
 \end{enumerate}
