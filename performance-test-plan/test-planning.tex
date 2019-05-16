@@ -74,12 +74,15 @@ For these experiments, I will start with attempting a simplistic version of the 
 	\end{enumerate}
 
  	\item \textbf{Experiment 3: Aggregation}
+ 	
  	\begin{enumerate}
- 		\item This test aims to measure the performance of aggregation with different parameters tuned to different values
- 		\item Use an aggregation method GROUP BY with the 1k and 10k tup, with three separate columns: columns with unique values, columns with 1/2 values, columns with 1-100 values.  Run similar tests with GROUP BY HAVING
- 		\item Queries will be based on the 1k 10k tables, with several predecates 
- 		\item Enable\_sort, work\_mem
+ 		
+ 		\item This test aims to measure the performance of aggregation with relevant parameters tuned to different values.  The spirit of this experiment will be testing at which point an aggregation step becomes unusably inefficient.  For two of the relations, ONEKTUP and TENKTUP, I'll be using a GROUP BY aggregation operator on different columns. Because these tables have various levels of uniqueness throughout their columns, it is easy to determine which columns should yield better performance than others.  The three columns I will group by are, in descending order of predicted performance, $ten$, $evenOnePercent$, and $unique3$. 
+ 		\item For this experiment I will use purely data from the Wisconsin Benchmark.  I will use the ONEKTUP and the TENKTUP relations.  If there is time and the results look to be interesting, I will also use the HUNDREDKTUP relation.
+ 		\item Queries will be similar to Query 22 and 25 from the Wisconsin Benchmark, but will not use a summation function.  Instead, I will swap out this function for a COUNT(*) function to try and isolate the effects of the aggregation (don't add additional work of finding the minimum value of a group).
+ 		\item There are two parameters I will be tweaking to try to get interesting results from this test: work\_mem and enable\_sort.  Enable\_sort will be turned off and aggregations performed.  Once it is re-enabled, I will test a sliding scale of values for work\_mem to see if the amount of memory allocated scales linearly to the performance of the aggregation.
  		\item \textbf{expected findings}
+ 		
  	\end{enumerate}
 
 	\item \textbf{Experiment 4: Query Optimization}
