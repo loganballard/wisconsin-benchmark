@@ -1,7 +1,6 @@
 \documentclass[11pt,letterpaper]{article}
 \usepackage[margin=0.75in]{geometry}
 \usepackage[latin1]{inputenc}
-\usepackage{amsmath, amsfonts, amssymb, graphicx, enumitem, algpseudocode}
 \usepackage{fancyhdr}
 \pagestyle{fancy}
 \lhead{CS587}
@@ -17,39 +16,48 @@
 	
 \item \textbf{Background}
 
-Due to its ubiquity and my own familiarity with the system, I have chosen to benchmark postgres against itself.   Postgres is a very flexible and well-supported database system which has a lot of community and enterprise backing behind it.  It will behoove me to learn much mroe of its ins and outs if I wish to use it professionally, which seems very likely given how widespread its adoption is.\\
+Due to its ubiquity and my own familiarity with the system, I have chosen to benchmark PostGreSQL (postgres) against itself.   Postgres is a very flexible and well-supported database system which has a lot of community and enterprise backing behind it.  It will behoove me to learn much more of its ins and outs if I wish to use it professionally.\\
 
-In addition to business reasons for choosing postgres, it is useful because it has a large amount of configurability.  This ability allows for near-infinite tweaking of performance to maximize different attributes of the database.  It also can be run locally without much setup, which allows for rapid iteration on various ideas.  Through tools like $pgAdmin$ and integration with familiar programming languages like $python3$ with the $psycopg2$ library, I was able to interface easily with the database and tune performance to my liking.  This allows for more in-depth and meaningful exploration of the actual data and concepts without extended ramp-up to the system.
+In addition to business reasons for choosing postgres, it is useful because it has a large amount of user control.  This ability allows for near-infinite tweaking of performance to maximize different attributes of the database.  It also can be run locally without much setup, which allows for rapid iteration on various ideas.  Through tools like $pgAdmin$ and integration with familiar programming languages like $python3$ with the $psycopg2$ library, I was able to interface easily with the database and tune performance to my liking.  This allows for more in-depth and meaningful exploration of the actual data and concepts without extended ramp-up to the system.
 
 \item \textbf{The System}
 
 I examined a few parameters that are involved in tuning postgres performance.  They came in two flavors: Memory Parameters and Query Planner Parameters.
 
 \begin{enumerate}{}
-	\item Memory Parameters
+	\item \textbf{Memory Parameters}
 	
 	\begin{enumerate}
-		\item \textit{work\_mem} - change performance of hash joins and sorts
+		
+		\item \textit{work\_mem} - This parameter impacts the amount of physical memory that is allowed to be used when creating hash tables (hash join or aggregation with hashing) or executing sort operations.  A smaller value allocates a lesser amount of memory, a greater value allocates a larger amount.
+		
 	\end{enumerate}
 	
-	\item Query Planning Parameters
+	\item \textbf{Query Planning Parameters}
 	
 	\begin{enumerate}
-		\item \textit{enable\_hashjoin} - Will want to find queries where a hash join is preferable and attempt to show performance of them improving or degrading.
-		\item \textit{enable\_mergejoin} - Will want to find queries where a merge join is preferable and attempt to show performance of them improving or degrading.  Maybe create a hierarchy of join types?
-		\item \textit{enable\_sort } - All sorting steps will be discouraged.  I would expect this to degrade performance significantly in ORDER BY and GROUP BY as well as sort-merge join queries.
-		\item \textit{geqo\_effort} - This parameter sets the amount of time that postgres will spend looking for the ideal query plan.  It will be most effective in complicated queries (I suspect)
+		
+		\item \textit{enable\_hashjoin} - This boolean parameter will enable or disable the query optimizer from using a hashing algorithm when joining two tables together.
+		
+		\item \textit{enable\_mergejoin} - This boolean parameter will enable or disable the query optimizer from using a sort/merge algorithm when joining two tables together.
+		
+		\item \textit{enable\_sort } - All sorting steps will be discouraged.  Note that sorting will not be disabled (this is impossible), but will be used only when there are no other options.  I would expect this to degrade performance significantly in ORDER BY and GROUP BY as well as sort-merge join queries.
+		
+		\item \textit{geqo\_effort} - This parameter sets the amount of time that postgres will spend looking for the ideal query plan.  It does not actually do anything directly, but instead sets the values for other parameters that control optimization: $geqo\_pool\_size, geqo\_generations, geqo\_selection\_bias,$ and $geqo\_seed$.  In turn, these parameters determine the trade off that postgres uses to find the optimal query plan: should it spend more time looking for the absolute best plan or settle for a sub-optimal plan and use the extra time to actually execute it?
+		
 	\end{enumerate}
 
 \end{enumerate}	
 
 \item \textbf{The Experiments}
 
-For these experiments, I will start with attempting a simplistic version of the test.  From there, I will move on to something more complicated and then finally perform the most intricate version of the test.  With each experiment I will measure the time taken for the query, join, insert, or update to execute.
+For these experiments, I will start with attempting a simplistic version of the test.  From there, I will move on to something more complicated and then finally perform the most intricate version of the test.  With each experiment I will measure the time taken for the query, join, insert, or update to execute.  With pgAdmin4, query time is automatically displayed in the query execution window and will thus be easily determined.
 
 \begin{enumerate}
 	
 	\item \textbf{Experiment 1: The 10\% Rule of Thumb}
+	
+	\textbf{Note:} this is taken directly from the assignment handout.
 	
 	\begin{enumerate}
 		
@@ -69,7 +77,7 @@ For these experiments, I will start with attempting a simplistic version of the 
 	 	\item For this experiment I will use purely data from the Wisconsin Benchmark.  I will use the ONEKTUP, TENKTUP, BPRIME, and the newly created HUNDREDKTUP (from experiment 1) for testing purposes. 
 	 	\item I will use queries 10 and 13 initially.  This is a large table joining a smaller table, once with an index and once without. I will use Query 15 with the prescribed TENKTUP tables as well as the HUNDREDKTUP created for experiment 1.  Finally, I will check out Query 17 in order to test hash join. 
 	 	\item I will be changing the boolean flags:  \textit{enable\_hashjoin} and \textit{enable\_mergejoin}. 
-	 	\item I expect that I will see pretty drastic performance changes between enabling and disabling the different parameters. The more interesting changes will be in situations where hash join were ordinarily be faster than a sort/merge join.  These performance differences will be tested with query 17, because ONEKTUP should be able to fit completely in memory.  So when hash join is enabled, I would expect performance to improve over sort/merge join.  For other relations, especially as the relations become very large (10K, 100K, possibly even something like 1M if my machine allows it), I would expect sort/merge join to outperform hash join.
+	 	\item I expect that I will see dramatic performance changes between enabling and disabling the different parameters. The more interesting changes will be in situations where hash join would ordinarily be faster than a sort/merge join.  These performance differences will be tested with query 17, because ONEKTUP should be able to fit completely in memory.  So when hash join is enabled, I would expect performance to improve over sort/merge join.  For other relations, especially as the relations become very large (10K, 100K, possibly even something like 1M if my machine allows it), I would expect sort/merge join to outperform hash join.
 	 	
 	\end{enumerate}
 
@@ -85,11 +93,11 @@ For these experiments, I will start with attempting a simplistic version of the 
  		
  	\end{enumerate}
 
-	\item \textbf{Experiment 4: Query Optimization}
+	\item \textbf{Experiment 4: GEQO Query Optimization}
 	\begin{enumerate}
 		\item For this experiment, I'd like to figure out just how much the query optimization time that postgres gives itself actually helps with performance.  I'd like to run a bunch of rounds of a few queries, each with the tuning set to different levels just to see if the improvement scales roughly linearly with the amount of time that the optimizer spends trying to optimize it.
 		\item Because the optimizer is likely only used when there can be a variety of different joins, I'd like to create a three-way and four-way join between the ONEKTUP, TENKTUP, HUNDREDKTUP, and BPRIME relations.
-		\item For join queries, I will use queries that are roughly equivalent to queries 10 and 13.  However, In addition to being a join from TENKTUP <--> BPRIME, I will add a third join to ONEKTUP on BPRIME.unique2 = ONEKTUP.unique2. In addition, I will run that query with HUNDREDKTUP rather than ONEKTUP.  For a four-way join, I will add an additional join such that the query is joining ONEKTUP (BPRIME.unique2 = ONEKTUP.unique2) AND HUNDREDKTUP (BPRIME.unique1 = HUNDREDKTUP.unique1).
+		\item For join queries, I will use queries that are roughly equivalent to queries 10 and 13.  However, In addition to being a join from TENKTUP $<-->$ BPRIME, I will add a third join to ONEKTUP on BPRIME.unique2 = ONEKTUP.unique2. In addition, I will run that query with HUNDREDKTUP rather than ONEKTUP.  For a four-way join, I will add an additional join such that the query is joining ONEKTUP (BPRIME.unique2 = ONEKTUP.unique2) AND HUNDREDKTUP (BPRIME.unique1 = HUNDREDKTUP.unique1).
 		\item \textit{geqo\_effort} will be tuned accordingly.  There are several different integers corresponding to the amount of time that postgres will take trying to find the best possible query tree for a certain join.  I will set it first to 1 (the minimum), then to 5 (the default value), then to 10 (the maximum).
 		\item I expect that for simple queries that involve just a single two-way join, this number will not matter a whole lot.  Postgres should be smart enough to find a join that is efficient in a relatively short amount of time.  However, as the amount of tables involved and the complexity of the joins themselves goes up, I suspect that this number will begin to be more and more important.
 	\end{enumerate}
