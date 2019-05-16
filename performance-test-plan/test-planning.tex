@@ -50,21 +50,27 @@ For these experiments, I will start with attempting a simplistic version of the 
 \begin{enumerate}
 	
 	\item \textbf{Experiment 1: The 10\% Rule of Thumb}
+	
 	\begin{enumerate}
+		
 		\item This test explores when it is good to use an unclustered index vs. not using an index vs. using a clustered index
 		\item Use a 100,000 tuple relation (scaled up version of TENKTUP1)
 		\item Use Wisconsin Bench queries 2, 4 and 6. Run queries 2, 4, and 6 on the same dataset. Query 2 should be run without an index on unique2, Query 4 should be run with a clustered index on unique2, Query 6 requires an unclustered index on unique1
 		\item No parameters changed in this test
-		\item 
+		\item I would expect that the rule of thumb is roughly correct.  I would think that once you reach the 10\% selectivity factor, there will be little gain from using an index.  However, I believe that RDBMSs have made significant strides in the past years, and I can only assume that they have created baked-in optimizations that are transparent to the end user.  Therefore, I suspect that the selectivity rules are creeping steadily upward.
+		
 	\end{enumerate}
 	 
-	\item \textbf{Experiment 2: Joins}
+	\item \textbf{Experiment 2: Join Algorithms - Hash vs Sort/Merge}
+	
 	\begin{enumerate}
-	 	\item This test aims to measure the performance of different types of joins across different relations using different algorithms.
-	 	\item Use the 1ktup joined with 1ktup, 10ktup joined with 10ktup
-	 	\item Run several joins - inner join on some predecate, left join, and joins not based on equality (join where id > 10)
-	 	\item Change hashjoin and mergejoin allowed
-	 	\item asdfasdfasdfasdfdsafdsa
+		
+	 	\item This test aims to measure the performance of different types of joins across different relations using different algorithms.  It is posited that hash joins are superior with a small relation is joined to a larger relation, and a sort/merge join performs better on two comparatively large relations.  
+	 	\item For this experiment I will use purely data from the Wisconsin Benchmark.  I will use the ONEKTUP, TENKTUP, BPRIME, and the newly created HUNDREDKTUP (from experiment 1) for testing purposes. 
+	 	\item I will use queries 10 and 13 initially.  This is a large table joining a smaller table, once with an index and once without. I will use Query 15 with the prescribed TENKTUP tables as well as the HUNDREDKTUP created for experiment 1.  Finally, I will check out Query 17 in order to test hash join. 
+	 	\item I will be changing the boolean flags:  \textit{enable\_hashjoin} and \textit{enable\_mergejoin}. 
+	 	\item I expect that I will see pretty drastic performance changes between enabling and disabling the different parameters. The more interesting changes will be in situations where hash join were ordinarily be faster than a sort/merge join.  These performance differences will be tested with query 17, because ONEKTUP should be able to fit completely in memory.  So when hash join is enabled, I would expect performance to improve over sort/merge join.  For other relations, especially as the relations become very large (10K, 100K, possibly even something like 1M if my machine allows it), I would expect sort/merge join to outperform hash join.
+	 	
 	\end{enumerate}
 
  	\item \textbf{Experiment 3: Aggregation}
@@ -73,7 +79,7 @@ For these experiments, I will start with attempting a simplistic version of the 
  		\item Use an aggregation method GROUP BY with the 1k and 10k tup, with three separate columns: columns with unique values, columns with 1/2 values, columns with 1-100 values.  Run similar tests with GROUP BY HAVING
  		\item Queries will be based on the 1k 10k tables, with several predecates 
  		\item Enable\_sort, work\_mem
- 		\item asdfasdfasdfasdfdsafdsa
+ 		\item \textbf{expected findings}
  	\end{enumerate}
 
 	\item \textbf{Experiment 4: Query Optimization}
