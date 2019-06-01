@@ -128,6 +128,24 @@ def create_tables(cursor, schema):
         stringu2        char(52) NOT NULL,
         string4         char(52) NOT NULL
     );""")
+    cursor.execute(f"""CREATE TABLE IF NOT EXISTS {schema}.MILKTUP1 (
+        unique1         integer NOT NULL,
+        unique2         integer NOT NULL PRIMARY KEY,
+        two             integer NOT NULL,
+        four            integer NOT NULL,
+        ten             integer NOT NULL,
+        twenty          integer NOT NULL,
+        onePercent      integer NOT NULL,
+        tenPercent      integer NOT NULL,
+        twentyPercent   integer NOT NULL,
+        fiftyPercent    integer NOT NULL,
+        unique3         integer NOT NULL,
+        evenOnePercent  integer NOT NULL,
+        oddOnePercent   integer NOT NULL,
+        stringu1        char(52) NOT NULL,
+        stringu2        char(52) NOT NULL,
+        string4         char(52) NOT NULL
+    );""")
 
 @transaction
 def insert_tuple(cursor, vals, schema, table):
@@ -197,17 +215,25 @@ def generate_data(conn, schema):
     """
     one_thous = sample(range(1000), 1000)
     ten_thous = sample(range(10000), 10000)
-    hun_thous = sample(range(100000), 100000)
+    hun_thous = sample(range(100000), 100000)  
+    million = sample(range(1000000), 1000000)
     for uniq2 in range(0, 100000):
-        hun_vals = build_vals_tup(uniq2, hun_thous)
-        insert_tuple(conn, vals=hun_vals, schema=schema, table='HUNDREDKTUP1')
+        mil_vals = build_vals_tup(uniq2, million)
+        insert_tuple(conn, vals=mil_vals, schema=schema, table='MILKTUP1')
         if uniq2 < 1000:
             one_vals = build_vals_tup(uniq2, one_thous)
             ten_vals = build_vals_tup(uniq2, ten_thous)
+            hun_vals = build_vals_tup(uniq2, hun_thous)
+            insert_tuple(conn, vals=hun_vals, schema=schema, table='HUNDREDKTUP1')
             insert_tuple(conn, vals=one_vals, schema=schema, table='ONEKTUP')
             insert_tuple(conn, vals=ten_vals, schema=schema, table='TENKTUP1')
             insert_tuple(conn, vals=ten_vals, schema=schema, table='TENKTUP2')
         elif uniq2 < 10000:
             ten_vals = build_vals_tup(uniq2, ten_thous)
+            hun_vals = build_vals_tup(uniq2, hun_thous)
+            insert_tuple(conn, vals=hun_vals, schema=schema, table='HUNDREDKTUP1')
             insert_tuple(conn, vals=ten_vals, schema=schema, table='TENKTUP1')
             insert_tuple(conn, vals=ten_vals, schema=schema, table='TENKTUP2')
+        elif uniq2 < 100000:
+            hun_vals = build_vals_tup(uniq2, hun_thous)
+            insert_tuple(conn, vals=hun_vals, schema=schema, table='HUNDREDKTUP1')
