@@ -8,17 +8,21 @@
 */
 -- Query 2 and 4
 SELECT * 
-FROM HUNDREDKTUP1
+FROM wisc.HUNDREDKTUP1
 WHERE unique2 BETWEEN 792 AND 1791;
+
+-- Index for query 4
+CREATE INDEX idx_hund_uniq2
+ON wisc.HUNDREDKTUP1(unique2);
+
+-- Index for query 6
+CREATE INDEX idx_hund_uniq1
+ON wisc.HUNDREDKTUP1(unique1);
 
 -- Query 6
 SELECT * 
-FROM HUNDREDKTUP1;
-
--- Index
-CREATE INDEX wisc.idx_hund_uniq2
-ON wisc.HUNDREDKTUP1(unique2);
-
+FROM wisc.HUNDREDKTUP1
+WHERE unique1 BETWEEN 792 AND 1791;
 
 /*
 ----------------------------------------------------
