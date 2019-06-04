@@ -63,7 +63,7 @@ WHERE TENKTUP2.unique2 < 1000;
 -- Query 10 and 13
 SELECT * 
 FROM wisc.TENKTUP1, wisc.BPRIME 
-WHERE (wisc.TENKTUP1.unique2 = wisc.BPRIME.unique2);
+WHERE (wisc.TENKTUP1.unique2 = wisc.BPRIME.unique2)
 
 -- Query 15
 SELECT * 
