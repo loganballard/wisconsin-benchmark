@@ -98,3 +98,17 @@ GROUP BY wisc.TENKTUP1.onePercent
 /*
     GEQO Query Optimization
 */
+
+-- Query 10
+
+SELECT * 
+FROM wisc.TENKTUP1, wisc.BPRIME, wisc.HUNDREDKTUP1, wisc.ONEKTUP
+WHERE (wisc.TENKTUP1.unique2 = wisc.BPRIME.unique2)
+AND (wisc.HUNDREDKTUP1.onePercent = wisc.BPRIME.onePercent)
+AND (wisc.ONEKTUP.unique3 = wisc.BPRIME.unique2)
+
+SELECT * 
+FROM wisc.TENKTUP1, wisc.BPRIME, wisc.HUNDREDKTUP1 --, wisc.ONEKTUP
+WHERE (wisc.TENKTUP1.unique2 = wisc.BPRIME.unique2)
+AND (wisc.HUNDREDKTUP1.onePercent = wisc.BPRIME.onePercent)
+--AND (wisc.ONEKTUP.unique3 = wisc.BPRIME.unique2)
