@@ -4,3 +4,4 @@ venv/*
 *.aux
 *.synctex.gz
 *.log
+~$*
